@@ -1,10 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const supabaseAnonKey =
+const rawUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+const rawKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_KEY ||
   "";
+
+// Sanitize URL and key against accidental wrapping quotes or whitespace from Vercel UI
+const supabaseUrl = rawUrl.trim().replace(/^["']|["']$/g, "");
+const supabaseAnonKey = rawKey.trim().replace(/^["']|["']$/g, "");
 
 export const isSupabaseConfigured = Boolean(
   supabaseUrl &&
@@ -73,7 +78,7 @@ export async function submitWaitlistSignup(data: WaitlistEntry): Promise<{
       return { success: true, storage: "supabase" };
     } else {
       console.warn(
-        "⚠️ [SchoolOn Waitlist] Supabase credentials not found or unconfigured. Saved to localStorage fallback."
+        `⚠️ [SchoolOn Waitlist] Supabase credentials not found or unconfigured (URL found: ${Boolean(supabaseUrl)}, Key found: ${Boolean(supabaseAnonKey)}). Saved to localStorage fallback.`
       );
       if (typeof window !== "undefined") {
         const stored = JSON.parse(localStorage.getItem("schoolon_waitlist_signups") || "[]");
