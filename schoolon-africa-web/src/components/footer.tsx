@@ -171,9 +171,9 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className="text-[11px] text-slate-400 leading-tight">
+            {/* <p className="text-[11px] text-slate-400 leading-tight">
               Schoolon Africa Portals (Admin, Parent, Mentor, Creator) opening with beta launch.
-            </p>
+            </p> */}
           </div>
 
         </div>
